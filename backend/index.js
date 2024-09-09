@@ -5,18 +5,15 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000; 
 
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get('/', async (req, res) => {
-    try {
-        res.json("possessions");
-    } catch (error) {
-        res.status(500).json({ error: 'Erreur lors de la récupération des possessions' });
-    }
+app.get('/', (req, res) => {
+    res.json("possessions");
 });
+
 // Route pour obtenir les possessions
 app.get('/api/possession', async (req, res) => {
     try {
@@ -33,7 +30,7 @@ app.post('/api/possession', async (req, res) => {
     try {
         const newPossession = await prisma.possessions.create({
             data: { Libelle, Valeur, DateDebut, DateFin, Taux },
-        });os
+        });
         res.status(201).json(newPossession);
     } catch (error) {
         res.status(400).json({ error: 'Erreur lors de la création de la possession' });
